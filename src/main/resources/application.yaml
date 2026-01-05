@@ -1,6 +1,9 @@
 spring:
   application:
     name: store
+  output:
+    ansi:
+      enabled: always
   datasource:
     url: jdbc:mysql://localhost:3306/store_api?createDatabaseIfNotExist=true
     username: meow

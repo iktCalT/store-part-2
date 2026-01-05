@@ -1,18 +1,30 @@
 package com.ken.store.controllers;
 
 import java.util.List;
-
+import java.util.Map;
+import java.util.Set;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.util.UriComponentsBuilder;
+import com.ken.store.dtos.ChangePasswordRequest;
+import com.ken.store.dtos.RegisterUserRequest;
+import com.ken.store.dtos.UpdateUserRequest;
 import com.ken.store.dtos.UserDto;
 import com.ken.store.mappers.UserMapper;
 import com.ken.store.repositories.UserRepository;
-
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+
 
 @RestController
 @AllArgsConstructor
@@ -27,11 +39,19 @@ public class UserController {
     // But RequestMapping can use other mthods like POST, DELETE...
     // @RequestMapping("") = @GetMapping("")
     @GetMapping("")
-    public List<UserDto> fetchAllUsers() {
-        return userRepository.findAll()
-                .stream() // List to Stream
-                .map(userMapper::toDto)
-                .toList(); // Stream to List
+    public List<UserDto> getAllUsers(
+            // required = false: sort is optional
+            // if sort is not provided, it will be defaultValue
+            // by default, defaultValue = null
+            // name = "sort": make sure the url is "sort"
+            @RequestParam(required = false, defaultValue = "", name = "sort") String sortBy) {
+        if (!Set.of("name", "email").contains(sortBy)) {
+            // Default: sort by name
+            sortBy = "name";
+        }
+
+        return userRepository.findAll(Sort.by(sortBy).ascending()).stream() // List to Stream
+                .map(userMapper::toDto).toList(); // Stream to List
     }
 
     @GetMapping("/{id}")
@@ -45,4 +65,83 @@ public class UserController {
         // return new ResponseEntity<>(user, HttpStatus.OK);
         return ResponseEntity.ok(userMapper.toDto(user));
     }
+
+    @PostMapping
+    // ResponseEntity<?> it can return ResponseEntity<UserDto>
+    // and ResponseEntity<Map<String, String>>
+    public ResponseEntity<?> registerUser(
+            @Valid @RequestBody RegisterUserRequest request,
+            UriComponentsBuilder uriBuilder) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            return ResponseEntity.badRequest().body(
+                Map.of("email", "Email is already registered")
+            );
+        }
+        var user = userMapper.toEntity(request);
+        userRepository.save(user);
+        var userDto = userMapper.toDto(user);
+
+        // Create URI (Uniform Resource Identifier)
+        var uri = uriBuilder.path("/users/{id}")
+                .buildAndExpand(user.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(userDto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> updateUser(
+            @PathVariable Long id,
+            @RequestBody UpdateUserRequest request) {
+        var user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        userMapper.update(request, user);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(userMapper.toDto(user));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        var user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        userRepository.delete(user);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/change-password")
+    public ResponseEntity<Void> changePassword(
+            @PathVariable Long id,
+            @RequestBody ChangePasswordRequest request) {
+        var user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (!user.getPassword().equals(request.getOldPassword())) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        user.setPassword(request.getNewPassword());
+        userRepository.save(user);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    /* // We will use global validation handler  
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationErrors(
+            MethodArgumentNotValidException exception) {
+        var errors = new HashMap<String, String>();
+        exception.getBindingResult().getFieldErrors().forEach(error -> {
+            errors.put(error.getField(), error.getDefaultMessage());
+        });
+        return ResponseEntity.badRequest().body(errors);
+    } */
+
 }

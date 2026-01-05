@@ -7,4 +7,6 @@ import com.ken.store.entities.User;
 // CrudRepository.findAll() returns an Iterable
 // JpaRepository.findAll() returns a List
 public interface UserRepository extends JpaRepository<User, Long> {
+
+    boolean existsByEmail(String email);
 }
