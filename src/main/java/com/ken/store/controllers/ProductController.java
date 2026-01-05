@@ -18,6 +18,9 @@ import com.ken.store.entities.Product;
 import com.ken.store.mappers.ProductMapper;
 import com.ken.store.repositories.CategoryRepository;
 import com.ken.store.repositories.ProductRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 
 
@@ -25,13 +28,14 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/products")
+@Tag(name = "Products")
 public class ProductController {
 
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
 
-
+    @Operation(summary = "Get all products (in a category)")
     @GetMapping("")
     public List<ProductDto> getProductsByCategoryId(
             @RequestHeader(required = false, name = "x-auth-token") String authToken,
@@ -47,9 +51,11 @@ public class ProductController {
         return products.stream().map(productMapper::toDto).toList();
     }
 
+    @Operation(summary = "Get a product")
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> getProductById(
-            @PathVariable Long id) {
+            @Parameter(description = "The ID of the product")
+                @PathVariable Long id) {
         var product = productRepository.findById(id).orElse(null);
         if (product == null)
             return ResponseEntity.notFound().build();
@@ -57,6 +63,7 @@ public class ProductController {
             return ResponseEntity.ok(productMapper.toDto(product));
     }
 
+    @Operation(summary = "Create a product")
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(
             @RequestBody ProductDto productDto,
@@ -77,6 +84,7 @@ public class ProductController {
         return ResponseEntity.created(uri).build();
     }
 
+    @Operation(summary = "Update product's information")
     @PutMapping("/{id}")
     public ResponseEntity<ProductDto> updateProduct(
             @PathVariable Long id,
@@ -99,6 +107,7 @@ public class ProductController {
         return ResponseEntity.ok(productMapper.toDto(product));
     }
 
+    @Operation(summary = "Delete a product")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(
             @PathVariable Long id) {

@@ -22,6 +22,9 @@ import com.ken.store.dtos.UpdateUserRequest;
 import com.ken.store.dtos.UserDto;
 import com.ken.store.mappers.UserMapper;
 import com.ken.store.repositories.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
@@ -29,6 +32,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/users")
+@Tag(name = "Users")
 public class UserController {
 
     private final UserRepository userRepository;
@@ -38,6 +42,7 @@ public class UserController {
     // so, it is same as @GetMapping
     // But RequestMapping can use other mthods like POST, DELETE...
     // @RequestMapping("") = @GetMapping("")
+    @Operation(summary = "Get all users")
     @GetMapping("")
     public List<UserDto> getAllUsers(
             // required = false: sort is optional
@@ -54,6 +59,7 @@ public class UserController {
                 .map(userMapper::toDto).toList(); // Stream to List
     }
 
+    @Operation(summary = "Get a use by its ID")
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
         var user = userRepository.findById(id).orElse(null);
@@ -66,6 +72,7 @@ public class UserController {
         return ResponseEntity.ok(userMapper.toDto(user));
     }
 
+    @Operation(summary = "Register a user")
     @PostMapping
     // ResponseEntity<?> it can return ResponseEntity<UserDto>
     // and ResponseEntity<Map<String, String>>
@@ -88,6 +95,7 @@ public class UserController {
         return ResponseEntity.created(uri).body(userDto);
     }
 
+    @Operation(summary = "Update user's information")
     @PutMapping("/{id}")
     public ResponseEntity<UserDto> updateUser(
             @PathVariable Long id,
@@ -103,6 +111,7 @@ public class UserController {
         return ResponseEntity.ok(userMapper.toDto(user));
     }
 
+    @Operation(summary = "Delete a user")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         var user = userRepository.findById(id).orElse(null);
@@ -114,6 +123,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Change user's password")
     @PostMapping("/{id}/change-password")
     public ResponseEntity<Void> changePassword(
             @PathVariable Long id,
