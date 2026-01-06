@@ -1,5 +1,6 @@
 package com.ken.store.repositories;
 
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ken.store.entities.User;
@@ -9,4 +10,6 @@ import com.ken.store.entities.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByEmail(String email);
+
+    public Optional<User> findByEmail(String email);
 }
