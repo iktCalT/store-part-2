@@ -1,18 +1,18 @@
 package com.ken.store.controllers;
 
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.ken.store.dtos.JwtResponse;
 import com.ken.store.dtos.LoginRequest;
-import com.ken.store.dtos.UserDto;
-import com.ken.store.exceptions.PasswordIncorrectException;
-import com.ken.store.exceptions.UserNotFoundException;
-import com.ken.store.services.AuthService;
+import com.ken.store.services.JwtService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
@@ -21,21 +21,23 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final AuthService authService;
-
+    private final AuthenticationManager authorizationManager;
+    private final JwtService jwtService;
 
     @PostMapping("/login")
-    public ResponseEntity<UserDto> login(@Valid @RequestBody LoginRequest request) {
-        var userDto = authService.login(request.getEmail(), request.getPassword());
-        return ResponseEntity.ok(userDto);
-    }
-    
-
-    // To prevent others from knowing which email is registered 
-    @ExceptionHandler({UserNotFoundException.class, PasswordIncorrectException.class})
-    public ResponseEntity<Map<String, String>> handlePasswordIncorrect() {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-            Map.of("error", "Incorrect email or password.")
+    public ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest request) {
+        authorizationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
+
+        var token = jwtService.generateToken(request.getEmail());
+
+        return ResponseEntity.ok(new JwtResponse(token));
+    }
+
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Void> handleBadCredentials() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }
