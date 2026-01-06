@@ -21,6 +21,7 @@ import com.ken.store.dtos.ChangePasswordRequest;
 import com.ken.store.dtos.RegisterUserRequest;
 import com.ken.store.dtos.UpdateUserRequest;
 import com.ken.store.dtos.UserDto;
+import com.ken.store.entities.Role;
 import com.ken.store.mappers.UserMapper;
 import com.ken.store.repositories.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -87,6 +88,7 @@ public class UserController {
         }
         var user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.USER);
         userRepository.save(user);
         var userDto = userMapper.toDto(user);
 

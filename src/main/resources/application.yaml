@@ -12,3 +12,5 @@ spring:
     show-sql: true
   jwt:
     secret: ${JWT_SECRET}
+    accessTokenExpiration: 900 # 15min
+    refreshTokenExpiration: 2_592_000 # 30 days
