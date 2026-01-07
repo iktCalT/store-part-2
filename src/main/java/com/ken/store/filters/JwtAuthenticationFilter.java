@@ -1,7 +1,9 @@
 package com.ken.store.filters;
 
 import java.io.IOException;
+import java.util.List;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -29,15 +31,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         
         var token = authHeader.replace("Bearer ", "");
-        if (!jwtService.validateToken(token)) {
+        var jwt = jwtService.parse(token);
+        if (jwt==null || jwt.isExpired()) {
             filterChain.doFilter(request, response);
             return;
         }
 
         var authentication = new UsernamePasswordAuthenticationToken(
-            jwtService.getUserIdFromToken(token),
+            jwt.getUserId(),
             null,
-            null
+            List.of(new SimpleGrantedAuthority("ROLE_" + jwt.getRole().name()))
         );
         authentication.setDetails(
             new WebAuthenticationDetailsSource().buildDetails(request)

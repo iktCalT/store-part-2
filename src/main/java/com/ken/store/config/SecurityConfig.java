@@ -68,8 +68,15 @@ public class SecurityConfig {
             )
             .addFilterBefore(jwtAuthenticationFilter, 
                 UsernamePasswordAuthenticationFilter.class)
-            .exceptionHandling(c -> c.authenticationEntryPoint(
-                new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
+            .exceptionHandling(c -> {
+                // If authentication doesn't pass return 401 UNAUTHORIZED by default
+                c.authenticationEntryPoint(
+                    new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+                // If request is denied, return 403 FORBIDEN by default
+                c.accessDeniedHandler(
+                    (request, response, accessDeniedHandler) 
+                    -> response.setStatus(HttpStatus.FORBIDDEN.value()));
+            });
         return http.build();
     }
 

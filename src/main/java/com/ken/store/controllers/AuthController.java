@@ -33,7 +33,7 @@ public class AuthController {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final AuthenticationManager authorizationManager;
+    private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final JwtConfig jwtConfig;
 
@@ -43,7 +43,7 @@ public class AuthController {
             @Valid @RequestBody LoginRequest request,
             HttpServletResponse response) {
         // If user validation passes, give the user a token
-        authorizationManager.authenticate(
+        authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
@@ -53,28 +53,29 @@ public class AuthController {
         var refreshToken = jwtService.generateRefreshToken(user);
 
         // make sure refreshToken cannot be stolen by JavaScript
-        var cookie = new Cookie("refreshToken", refreshToken);
+        var cookie = new Cookie("refreshToken", refreshToken.toString());
         cookie.setHttpOnly(true); 
         cookie.setPath("/auth/refresh");
         cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration()); // cookie expires in ? days
         cookie.setSecure(true); // only be sent over https connections
         response.addCookie(cookie);
 
-        return ResponseEntity.ok(new JwtResponse(accesstoken));
+        return ResponseEntity.ok(new JwtResponse(accesstoken.toString()));
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<JwtResponse> refresh(
         @CookieValue(value = "refreshToken") String refreshToken
     ) {
-        if (!jwtService.validateToken(refreshToken)) {
+        var jwt = jwtService.parse(refreshToken);
+        if (jwt == null || jwt.isExpired()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        var userId = jwtService.getUserIdFromToken(refreshToken);
-        var user = userRepository.findById(userId).orElseThrow();
+
+        var user = userRepository.findById(jwt.getUserId()).orElseThrow();
         var accessToken = jwtService.generateAccessToken(user);
 
-        return ResponseEntity.ok(new JwtResponse(accessToken));
+        return ResponseEntity.ok(new JwtResponse(accessToken.toString()));
     }
     
 

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
     @GetMapping
     public String sayHello() {
-        return "Hello, admin";
+        return "Hello admin!";
     }
     
 }

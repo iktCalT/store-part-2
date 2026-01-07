@@ -1,14 +1,12 @@
 package com.ken.store.services;
 
 import java.util.Date;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.ken.store.config.JwtConfig;
 import com.ken.store.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -17,38 +15,34 @@ public class JwtService {
 
     private final JwtConfig jwtConfig;
 
-    public String generateAccessToken(User user) {
-        return generateToken(user, jwtConfig.getAccessTokenExpiration());
+    public Jwt generateAccessToken(User user) {
+        return generateJwt(user, jwtConfig.getAccessTokenExpiration());
     }
 
-    public String generateRefreshToken(User user) {
-        return generateToken(user, jwtConfig.getRefreshTokenExpiration());
+    public Jwt generateRefreshToken(User user) {
+        return generateJwt(user, jwtConfig.getRefreshTokenExpiration());
     }
 
-    private String generateToken(User user, final long tokenExpiration) {
-        return Jwts.builder()
+    private Jwt generateJwt(User user, long tokenExpiration) {
+        var claims = Jwts.claims()
             .subject(user.getId().toString())
-            .claim("email", user.getEmail())
-            .claim("name", user.getName())
-            .claim("role", user.getRole())
+            .add("email", user.getEmail())
+            .add("name", user.getName())
+            .add("role", user.getRole().name())
             .issuedAt(new Date())
             .expiration(new Date(System.currentTimeMillis() + 1000 * tokenExpiration))
-            .signWith(jwtConfig.getSecretKey())
-            .compact();
+            .build();
+
+        return new Jwt(claims, jwtConfig.getSecretKey());
     }
 
-    public boolean validateToken(String token) {
+    public Jwt parse(String token) {
         try {
             var claims = getClaims(token);
-            boolean isValid = claims.getExpiration().after(new Date());
-            return isValid;
+            return new Jwt(claims, jwtConfig.getSecretKey());
         } catch (JwtException e) {
-            return false;
+            return null;
         }
-    }
-
-    public Long getUserIdFromToken(String token) {
-        return Long.valueOf(getClaims(token).getSubject());
     }
 
     private Claims getClaims(String token) {
@@ -58,4 +52,5 @@ public class JwtService {
             .parseSignedClaims(token)
             .getPayload();
     }
+
 }
