@@ -103,7 +103,7 @@ public class CartController {
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleProductNotFound() {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-            Map.of("error", "Product was not found in the cart.")
+            Map.of("error", "Product was not found.")
         );
     }
 }
