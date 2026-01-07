@@ -18,9 +18,9 @@ public class OrderService {
     private final OrderMapper orderMapper;
 
     public List<OrderDto> getAllOrders() {
-        var customer = authService.getCurrentUser();
+        var user = authService.getCurrentUser();
 
-        var orders = orderRepository.findByCustomerId(customer.getId());
+        var orders = orderRepository.findByCustomerId(user.getId());
         var ordersDto = orders.stream()
             .map(order -> orderMapper.toDto(order))
             .toList();
@@ -33,8 +33,8 @@ public class OrderService {
             throw new OrderNotExistException();
         }
 
-        var customer = authService.getCurrentUser();
-        if (order.getCustomer().getId() != customer.getId()) {
+        var user = authService.getCurrentUser();
+        if (order.getCustomer().getId() != user.getId()) {
             throw new OrderNotBelongToUserException();
         }
 
