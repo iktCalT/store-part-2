@@ -60,6 +60,9 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(c -> c
                 .requestMatchers("/").permitAll()
+                .requestMatchers("/error").permitAll()
+                .requestMatchers(HttpMethod.GET, "/swagger-ui/**").hasRole(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").hasRole(Role.ADMIN.name())
                 .requestMatchers("/carts/**").permitAll() // All requests in "/carts/**" are public
                 .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.GET, "/users/**").hasRole(Role.ADMIN.name()) // Admin can get all users
@@ -67,6 +70,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll() // Login is public
                 .requestMatchers(HttpMethod.POST, "/auth/refresh").permitAll()
                 .requestMatchers(HttpMethod.POST, "/checkout/webhook").permitAll() // stripe / paypal will not login as a user, we have to make this endpoint public 
+                .requestMatchers(HttpMethod.GET, "/payment-result/**").permitAll()
                 .anyRequest().authenticated() // All other requests are private (only authorized browsers can access it)
             )
             .addFilterBefore(jwtAuthenticationFilter, 

@@ -83,11 +83,15 @@ public class StripePaymentGateway implements PaymentGateway {
             
             // `case __ -> [code]` equals to `case: ___ [code] break;`
             return switch (event.getType()) {
+                // "checkout.session.completed" contains: paid and unpaid
+                case "checkout.session.completed" -> 
+                    Optional.of(extractFromSession(event));
+
                 case "payment_intent.succeeded" -> 
-                    Optional.of(new PaymentResult(extractOrderId(event), OrderStatus.PAID));
+                    Optional.of(new PaymentResult(extractOrderIdFromIntent(event), OrderStatus.PAID));
                 
                 case "payment_intent.payment_failed" -> 
-                    Optional.of(new PaymentResult(extractOrderId(event), OrderStatus.FAILED));
+                    Optional.of(new PaymentResult(extractOrderIdFromIntent(event), OrderStatus.FAILED));
                 
                 default -> Optional.empty();
             };
@@ -97,7 +101,21 @@ public class StripePaymentGateway implements PaymentGateway {
         }
     }
 
-    private Long extractOrderId(Event event) {
+    private PaymentResult extractFromSession(Event event) {
+        var stripeObject = event.getDataObjectDeserializer().getObject().orElseThrow(
+            () -> new PaymentException("Could not deserialize Stripe event. Check SDK and API version")
+        );
+
+        var session = (Session) stripeObject;
+        var orderId = session.getMetadata().get("order_id");
+        if ("paid".equals(session.getPaymentStatus())) {
+            return new PaymentResult(Long.valueOf(orderId), OrderStatus.PAID);
+        } else {
+            return new PaymentResult(Long.valueOf(orderId), OrderStatus.PENDING);
+        }
+    }
+
+    private Long extractOrderIdFromIntent(Event event) {
         var stripeObject = event.getDataObjectDeserializer().getObject().orElseThrow(
             () -> new PaymentException("Could not deserialize Stripe event. Check SDK and API version")
         );
