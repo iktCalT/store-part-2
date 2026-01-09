@@ -1,4 +1,4 @@
-package com.ken.store.controllers;
+package com.ken.store.common.controllers;
 
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Controller;

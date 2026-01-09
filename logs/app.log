@@ -236,3 +236,61 @@ Caused by: org.springframework.context.annotation.ConflictingBeanDefinitionExcep
 2026-01-09T13:47:38.131+08:00  INFO 19280 --- [store] [main] o.s.b.w.a.WelcomePageHandlerMapping      : Adding welcome page template: index
 2026-01-09T13:47:38.815+08:00  INFO 19280 --- [store] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
 2026-01-09T13:47:38.825+08:00  INFO 19280 --- [store] [main] com.ken.store.StoreApplication           : Started StoreApplication in 8.9 seconds (process running for 9.373)
+2026-01-09T14:49:57.723+08:00  INFO 20344 --- [store] [main] com.ken.store.StoreApplication           : Starting StoreApplication using Java 23.0.2 with PID 20344 (D:\CS\Java\Java_works\store-part-2\target\classes started by Meow5 in D:\CS\Java\Java_works\store-part-2)
+2026-01-09T14:49:57.731+08:00 DEBUG 20344 --- [store] [main] com.ken.store.StoreApplication           : Running with Spring Boot v4.0.1, Spring v7.0.2
+2026-01-09T14:49:57.735+08:00  INFO 20344 --- [store] [main] com.ken.store.StoreApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-01-09T14:49:59.678+08:00  INFO 20344 --- [store] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-09T14:49:59.873+08:00  INFO 20344 --- [store] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 159 ms. Found 7 JPA repository interfaces.
+2026-01-09T14:50:00.890+08:00  INFO 20344 --- [store] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-01-09T14:50:00.922+08:00  INFO 20344 --- [store] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-09T14:50:00.924+08:00  INFO 20344 --- [store] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.15]
+2026-01-09T14:50:01.105+08:00  INFO 20344 --- [store] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 3155 ms
+2026-01-09T14:50:01.258+08:00 DEBUG 20344 --- [store] [main] c.k.s.a.filters.JwtAuthenticationFilter  : Filter 'jwtAuthenticationFilter' configured for use
+2026-01-09T14:50:01.259+08:00 DEBUG 20344 --- [store] [main] c.k.store.common.filters.LoggingFilter   : Filter 'loggingFilter' configured for use
+2026-01-09T14:50:01.479+08:00  INFO 20344 --- [store] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-01-09T14:50:02.334+08:00  INFO 20344 --- [store] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@731db93f
+2026-01-09T14:50:02.339+08:00  INFO 20344 --- [store] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-01-09T14:50:02.492+08:00  INFO 20344 --- [store] [main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-01-09T14:50:02.744+08:00  INFO 20344 --- [store] [main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.0.Final
+2026-01-09T14:50:03.365+08:00  INFO 20344 --- [store] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-09T14:50:03.512+08:00  INFO 20344 --- [store] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/store_api?createDatabaseIfNotExist=true]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.44
+	Default catalog/schema: store_api/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-01-09T14:50:04.765+08:00  INFO 20344 --- [store] [main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-09T14:50:04.777+08:00  INFO 20344 --- [store] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-09T14:50:04.966+08:00  INFO 20344 --- [store] [main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-01-09T14:50:05.267+08:00  INFO 20344 --- [store] [main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-01-09T14:50:05.267+08:00  WARN 20344 --- [store] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-01-09T14:50:07.369+08:00  WARN 20344 --- [store] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-01-09T14:50:07.848+08:00  INFO 20344 --- [store] [main] o.s.b.w.a.WelcomePageHandlerMapping      : Adding welcome page template: index
+2026-01-09T14:50:08.795+08:00  INFO 20344 --- [store] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-01-09T14:50:08.803+08:00  INFO 20344 --- [store] [main] com.ken.store.StoreApplication           : Started StoreApplication in 11.798 seconds (process running for 12.311)
+2026-01-09T14:50:33.206+08:00  INFO 20344 --- [store] [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-01-09T14:50:33.206+08:00  INFO 20344 --- [store] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-01-09T14:50:33.206+08:00  INFO 20344 --- [store] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2026-01-09T14:50:43.019+08:00 DEBUG 20344 --- [store] [http-nio-8080-exec-4] org.hibernate.SQL                        : select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.role from users u1_0 where u1_0.email=?
+2026-01-09T14:50:43.185+08:00 DEBUG 20344 --- [store] [http-nio-8080-exec-4] org.hibernate.SQL                        : select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.role from users u1_0 where u1_0.email=?
+2026-01-09T14:50:54.129+08:00 DEBUG 20344 --- [store] [http-nio-8080-exec-6] org.hibernate.SQL                        : select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.role from users u1_0 order by u1_0.name
+2026-01-09T14:51:14.093+08:00 DEBUG 20344 --- [store] [http-nio-8080-exec-8] org.hibernate.SQL                        : select u1_0.id from users u1_0 where u1_0.email=? limit ?
+2026-01-09T14:51:14.198+08:00 DEBUG 20344 --- [store] [http-nio-8080-exec-8] org.hibernate.SQL                        : insert into users (email,name,password,role) values (?,?,?,?)
+2026-01-09T14:51:25.549+08:00 DEBUG 20344 --- [store] [http-nio-8080-exec-10] org.hibernate.SQL                        : select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.role from users u1_0 where u1_0.email=?
+2026-01-09T14:51:25.629+08:00 DEBUG 20344 --- [store] [http-nio-8080-exec-10] org.hibernate.SQL                        : select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.role from users u1_0 where u1_0.email=?
+2026-01-09T14:51:50.109+08:00 DEBUG 20344 --- [store] [http-nio-8080-exec-4] org.hibernate.SQL                        : select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.role from users u1_0 where u1_0.id=?
+2026-01-09T14:51:50.118+08:00 DEBUG 20344 --- [store] [http-nio-8080-exec-4] org.hibernate.SQL                        : select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.role from users u1_0 where u1_0.id=?
+2026-01-09T14:52:06.017+08:00 DEBUG 20344 --- [store] [http-nio-8080-exec-6] org.hibernate.SQL                        : select u1_0.id,u1_0.email,u1_0.name,u1_0.password,u1_0.role from users u1_0 where u1_0.id=?
+2026-01-09T14:52:06.066+08:00 DEBUG 20344 --- [store] [http-nio-8080-exec-6] org.hibernate.SQL                        : update users set email=?,name=?,password=?,role=? where id=?
+2026-01-09T14:52:25.421+08:00 DEBUG 20344 --- [store] [http-nio-8080-exec-8] org.hibernate.SQL                        : select c1_0.id,c1_0.date_created,i1_0.cart_id,i1_0.id,p1_0.id,p1_0.category_id,p1_0.description,p1_0.name,p1_0.price,i1_0.quantity from carts c1_0 left join cart_items i1_0 on c1_0.id=i1_0.cart_id left join products p1_0 on p1_0.id=i1_0.product_id where c1_0.id=?
+2026-01-09T14:52:25.462+08:00 DEBUG 20344 --- [store] [http-nio-8080-exec-8] org.hibernate.SQL                        : select p1_0.id,c1_0.id,c1_0.name,p1_0.description,p1_0.name,p1_0.price from products p1_0 left join categories c1_0 on c1_0.id=p1_0.category_id where p1_0.id=?
+2026-01-09T14:52:25.492+08:00 DEBUG 20344 --- [store] [http-nio-8080-exec-8] org.hibernate.SQL                        : insert into cart_items (cart_id,product_id,quantity) values (?,?,?)
+2026-01-09T14:52:29.285+08:00 DEBUG 20344 --- [store] [http-nio-8080-exec-9] org.hibernate.SQL                        : select c1_0.id,c1_0.date_created,i1_0.cart_id,i1_0.id,p1_0.id,p1_0.category_id,p1_0.description,p1_0.name,p1_0.price,i1_0.quantity from carts c1_0 left join cart_items i1_0 on c1_0.id=i1_0.cart_id left join products p1_0 on p1_0.id=i1_0.product_id where c1_0.id=?
+2026-01-09T14:52:44.883+08:00 DEBUG 20344 --- [store] [http-nio-8080-exec-1] org.hibernate.SQL                        : select c1_0.id,c1_0.date_created,i1_0.cart_id,i1_0.id,p1_0.id,p1_0.category_id,p1_0.description,p1_0.name,p1_0.price,i1_0.quantity from carts c1_0 left join cart_items i1_0 on c1_0.id=i1_0.cart_id left join products p1_0 on p1_0.id=i1_0.product_id where c1_0.id=?
+2026-01-09T14:52:52.347+08:00 DEBUG 20344 --- [store] [http-nio-8080-exec-3] org.hibernate.SQL                        : select c1_0.id,c1_0.date_created,i1_0.cart_id,i1_0.id,p1_0.id,p1_0.category_id,p1_0.description,p1_0.name,p1_0.price,i1_0.quantity from carts c1_0 left join cart_items i1_0 on c1_0.id=i1_0.cart_id left join products p1_0 on p1_0.id=i1_0.product_id where c1_0.id=?

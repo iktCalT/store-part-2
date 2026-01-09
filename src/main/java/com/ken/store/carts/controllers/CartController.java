@@ -19,7 +19,7 @@ import com.ken.store.carts.dtos.UpdateCartItemRequest;
 import com.ken.store.carts.exceptions.CartNotFoundException;
 import com.ken.store.carts.exceptions.ProductNotFoundInCartException;
 import com.ken.store.carts.services.CartService;
-import com.ken.store.dtos.ErrorDto;
+import com.ken.store.common.dtos.ErrorDto;
 import com.ken.store.products.exceptions.ProductNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

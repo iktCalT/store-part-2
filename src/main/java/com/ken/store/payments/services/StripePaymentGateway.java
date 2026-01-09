@@ -2,11 +2,8 @@ package com.ken.store.payments.services;
 
 import java.math.BigDecimal;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import com.ken.store.filters.LoggingFilter;
 import com.ken.store.orders.entities.Order;
 import com.ken.store.orders.entities.OrderItem;
 import com.ken.store.orders.entities.OrderStatus;
@@ -22,24 +19,17 @@ import com.stripe.param.checkout.SessionCreateParams.Builder;
 import com.stripe.param.checkout.SessionCreateParams.LineItem.PriceData;
 import com.stripe.param.checkout.SessionCreateParams.LineItem.PriceData.ProductData;
 import com.stripe.param.checkout.SessionCreateParams.Mode;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 public class StripePaymentGateway implements PaymentGateway {
-
-    private final LoggingFilter loggingFilter;
     
     @Value("${websiteUrl}")
     private String websiteUrl;
 
     @Value("${stripe.webhookSecretKey}")
     private String webhookSecretKey;
-
-    StripePaymentGateway(LoggingFilter loggingFilter) {
-        this.loggingFilter = loggingFilter;
-    }
 
     @Override
     public CheckoutSession createCheckoutSession(Order order) {

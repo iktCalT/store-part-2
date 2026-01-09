@@ -1,4 +1,4 @@
-package com.ken.store.dtos;
+package com.ken.store.common.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

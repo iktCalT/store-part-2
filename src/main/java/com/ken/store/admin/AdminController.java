@@ -1,4 +1,4 @@
-package com.ken.store.controllers;
+package com.ken.store.admin;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -2,7 +2,6 @@ package com.ken.store.users.mappers;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
-
 import com.ken.store.users.dtos.RegisterUserRequest;
 import com.ken.store.users.dtos.UpdateUserRequest;
 import com.ken.store.users.dtos.UserDto;

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ken.store.carts.exceptions.CartEmptyException;
 import com.ken.store.carts.exceptions.CartNotFoundException;
-import com.ken.store.dtos.ErrorDto;
+import com.ken.store.common.dtos.ErrorDto;
 import com.ken.store.payments.dtos.CheckoutRequest;
 import com.ken.store.payments.dtos.CheckoutResponse;
 import com.ken.store.payments.exceptions.PaymentException;
@@ -46,14 +46,14 @@ public class CheckoutController {
     }
     
     @ExceptionHandler({CartNotFoundException.class, CartEmptyException.class})
-    public ResponseEntity<ErrorDto> handleCartException(Exception e) {
+    public ResponseEntity<ErrorDto> handleCartEmptyException(Exception e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
             new ErrorDto(e.getMessage())
         );
     }
 
     @ExceptionHandler(PaymentException.class)
-    public ResponseEntity<ErrorDto> handlePaymentException(Exception e) {
+    public ResponseEntity<ErrorDto> handlePaymentException() {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorDto("Error creating a checkout session"));
     }

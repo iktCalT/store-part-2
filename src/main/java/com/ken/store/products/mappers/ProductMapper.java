@@ -16,8 +16,8 @@ public interface ProductMapper {
 
     Product toEntity(ProductDto productDto);
 
-    @Mapping(target = "id", ignore = true)
     // Ignore mapping id 
     // the id of productDto is null, we should not map it to product
+    @Mapping(target = "id", ignore = true)
     Product update(ProductDto productDto, @MappingTarget Product product);
 }
