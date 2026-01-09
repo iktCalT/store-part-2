@@ -12,5 +12,18 @@ spring:
     show-sql: true
   jwt:
     secret: ${JWT_SECRET}
-    accessTokenExpiration: 900 # 15min
+    accessTokenExpiration: 7200 # 2h
     refreshTokenExpiration: 2_592_000 # 30 days
+
+logging:
+  level:
+    root: INFO
+    com.ken.store: DEBUG 
+    org.hibernate.SQL: DEBUG 
+  file:
+    name: logs/app.log 
+
+stripe:
+  secretKey: ${STRIPE_SECRET_KEY}
+  webhookSecretKey: ${STRIPE_WEBHOOK_SECRET_KEY}
+websiteUrl: http://localhost:7777

@@ -100,7 +100,7 @@
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
-            <version>0.12.5</version>
+            <version>0.12.6</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -111,6 +111,11 @@
             <groupId>me.paulschwarz</groupId>
             <artifactId>springboot4-dotenv</artifactId>
             <version>5.1.0</version> 
+        </dependency>
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>31.1.0</version>
         </dependency>
     </dependencies>
 
