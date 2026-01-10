@@ -61,12 +61,17 @@ public class SecurityConfig {
             .authorizeHttpRequests(c -> c
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/error").permitAll()
-                .requestMatchers(HttpMethod.GET, "/swagger-ui/**").hasRole(Role.ADMIN.name())
-                .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").hasRole(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
+                .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
                 .requestMatchers("/carts/**").permitAll() // All requests in "/carts/**" are public
                 .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.GET, "/users/**").hasRole(Role.ADMIN.name()) // Admin can get all users
                 .requestMatchers(HttpMethod.POST, "/users").permitAll() // registerUser() is public
+                .requestMatchers(HttpMethod.GET, "/products/**").permitAll() 
+                .requestMatchers(HttpMethod.POST, "/products/**").hasRole(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.PUT, "/products/**").hasRole(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll() // Login is public
                 .requestMatchers(HttpMethod.POST, "/auth/refresh").permitAll()
                 .requestMatchers(HttpMethod.POST, "/checkout/webhook").permitAll() // stripe / paypal will not login as a user, we have to make this endpoint public 
