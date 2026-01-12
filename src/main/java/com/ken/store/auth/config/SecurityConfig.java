@@ -1,8 +1,8 @@
 package com.ken.store.auth.config;
 
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -19,7 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import com.ken.store.auth.filters.JwtAuthenticationFilter;
-import com.ken.store.users.entities.Role;
+import com.ken.store.common.security.SecurityRules;
 import lombok.AllArgsConstructor;
 
 @Configuration
@@ -28,6 +28,10 @@ import lombok.AllArgsConstructor;
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    // Spring will automatically initialize this List 
+    // it will add all implementations of SecurityRules
+    // to this list (it should be annotated as @Component)
+    private final List<SecurityRules> featureSecurityRules; 
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -58,26 +62,12 @@ public class SecurityConfig {
             .sessionManagement(c -> 
                 c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(c -> c
-                .requestMatchers("/").permitAll()
-                .requestMatchers("/error").permitAll()
-                .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
-                .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
-                .requestMatchers("/carts/**").permitAll() // All requests in "/carts/**" are public
-                .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
-                .requestMatchers(HttpMethod.GET, "/users/**").hasRole(Role.ADMIN.name()) // Admin can get all users
-                .requestMatchers(HttpMethod.POST, "/users").permitAll() // registerUser() is public
-                .requestMatchers(HttpMethod.GET, "/products/**").permitAll() 
-                .requestMatchers(HttpMethod.POST, "/products/**").hasRole(Role.ADMIN.name())
-                .requestMatchers(HttpMethod.PUT, "/products/**").hasRole(Role.ADMIN.name())
-                .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole(Role.ADMIN.name())
-                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll() // Login is public
-                .requestMatchers(HttpMethod.POST, "/auth/refresh").permitAll()
-                .requestMatchers(HttpMethod.POST, "/checkout/webhook").permitAll() // stripe / paypal will not login as a user, we have to make this endpoint public 
-                .requestMatchers(HttpMethod.GET, "/payment-result/**").permitAll()
-                .anyRequest().authenticated() // All other requests are private (only authorized browsers can access it)
-            )
+            .authorizeHttpRequests(c -> {
+                // list.forEach() is accutually a loop
+                // it is faster than list.stream().forEach()
+                featureSecurityRules.forEach(rule -> rule.configure(c));
+                c.anyRequest().authenticated(); //// All other requests are private (only authorized browsers can access it)
+            })
             .addFilterBefore(jwtAuthenticationFilter, 
                 UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling(c -> {
