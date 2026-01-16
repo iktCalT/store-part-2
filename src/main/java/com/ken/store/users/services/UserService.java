@@ -96,11 +96,11 @@ public class UserService {
             throw new UserNotFoundException();
         }
 
-        if (!user.getPassword().equals(request.getOldPassword())) {
+        if (passwordEncoder.matches(user.getPassword(), request.getOldPassword())) {
             throw new AccessDeniedException("Wrong password");
         }
 
-        user.setPassword(request.getNewPassword());
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
     }
 }
